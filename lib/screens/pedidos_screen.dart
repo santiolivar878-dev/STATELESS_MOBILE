@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/api_service.dart';
-import '../models/pedido.dart';
+import '../models/pedidos.dart';
 import 'login_screen.dart';
 
 class PedidosScreen extends StatefulWidget {

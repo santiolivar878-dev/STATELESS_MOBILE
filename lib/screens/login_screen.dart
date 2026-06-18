@@ -20,13 +20,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     setState(() { _loading = true; _error = null; });
-
     try {
       final data = await ApiService.login(
         _emailController.text,
         _passwordController.text,
       );
-
       if (data['token'] != null) {
         await ApiService.saveToken(data['token']);
         if (mounted) {
@@ -41,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       setState(() { _error = 'Error de conexión'; });
     }
-
     setState(() { _loading = false; });
   }
 
@@ -50,34 +47,89 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 60),
-              Text(
-                'STATELESS',
-                style: GoogleFonts.bebasNeue(
-                  fontSize: 40,
-                  letterSpacing: 8,
-                  color: Colors.black,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 60),
+                Text(
+                  'STATELESS',
+                  style: GoogleFonts.bebasNeue(
+                    fontSize: 40,
+                    letterSpacing: 8,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Iniciar Sesión',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: Colors.black54,
-                  letterSpacing: 1,
+                const SizedBox(height: 8),
+                Text(
+                  'Iniciar Sesión',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    color: Colors.black54,
+                    letterSpacing: 1,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 48),
-
-              if (_error != null)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 16),
-                  color: Colors.red.shade50,
-                  child: Text(_error!, style: const TextStyle(color: Colors.red, fontSize: 13)),
+                const SizedBox(height: 48),
+                if (_error != null)
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    color: Colors.red.shade50,
+                    child: Text(_error!, style: const TextStyle(color: Colors.red, fontSize: 13)),
+                  ),
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.zero),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Contraseña',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.zero),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _loading ? null : _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    ),
+                    child: _loading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text('INICIAR SESIÓN', style: GoogleFonts.inter(letterSpacing: 2)),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                    ),
+                    child: Text(
+                      '¿No tienes cuenta? Regístrate',
+                      style: GoogleFonts.inter(color: Colors.black54, fontSize: 13),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

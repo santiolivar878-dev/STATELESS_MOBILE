@@ -27,11 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _cargarProductos() async {
     try {
       final data = await ApiService.getProductos();
+      print('✅ Productos recibidos: ${data.length}');
+      print('📦 Data: $data');
       setState(() {
         _productos = data.map((p) => Producto.fromJson(p)).toList();
         _loading = false;
       });
     } catch (e) {
+      print('❌ ERROR cargando productos: $e');
       setState(() { _loading = false; });
     }
   }
@@ -95,9 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: producto.imagen != null
                       ? Image.network(
-                          'http://127.0.0.1:8000/images/${producto.imagen}',
+                          'http://127.0.0.1:8000/api/imagen/${producto.imagen}',
                           fit: BoxFit.cover,
                           width: double.infinity,
+                          headers: const {'Access-Control-Allow-Origin': '*'},
                           errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade200),
                         )
                       : Container(color: Colors.grey.shade200),

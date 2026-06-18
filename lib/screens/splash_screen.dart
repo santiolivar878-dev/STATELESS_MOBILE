@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart'; // ← corregido
 import 'login_screen.dart';
 import 'home_screen.dart';
 
@@ -20,14 +20,28 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkAuth() async {
     await Future.delayed(const Duration(seconds: 2));
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+
+    bool tokenValido = false;
+    final token = await ApiService.getToken();
+
+    if (token != null) {
+      try {
+        final perfil = await ApiService.getMiPerfil();
+        tokenValido = perfil['id'] != null;
+      } catch (_) {
+        tokenValido = false;
+      }
+    }
+
+    if (!tokenValido) {
+      await ApiService.removeToken();
+    }
 
     if (mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => token != null ? const HomeScreen() : const LoginScreen(),
+          builder: (_) => tokenValido ? const HomeScreen() : const LoginScreen(),
         ),
       );
     }

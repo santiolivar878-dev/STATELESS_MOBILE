@@ -21,10 +21,11 @@ class ProductoScreen extends StatelessWidget {
             // Imagen
             producto.imagen != null
                 ? Image.network(
-                    'http://127.0.0.1:8000/images/${producto.imagen}',
+                    'http://127.0.0.1:8000/api/imagen/${producto.imagen}',
                     width: double.infinity,
                     height: 400,
                     fit: BoxFit.cover,
+                    headers: const {'Access-Control-Allow-Origin': '*'},
                     errorBuilder: (_, __, ___) => Container(
                       height: 400,
                       color: Colors.grey.shade200,

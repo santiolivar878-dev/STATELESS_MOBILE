@@ -30,7 +30,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
     try {
       final data = await ApiService.getMiPerfil();
       setState(() {
-        _usuario = data['user'];
+        _usuario = data;
         _loading = false;
       });
     } catch (e) {
@@ -116,7 +116,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                       // Rol
                       Text('ROL', style: GoogleFonts.inter(fontSize: 10, letterSpacing: 2, color: Colors.black38)),
                       const SizedBox(height: 4),
-                      Text(_usuario!['role'].toUpperCase(), style: GoogleFonts.inter(fontSize: 16)),
+                      Text((_usuario!['role_id'] == 1 ? 'Admin' : _usuario!['role_id'] == 2 ? 'Empleado' : 'Cliente').toUpperCase(), style: GoogleFonts.inter(fontSize: 16)),
                       const Divider(height: 32),
 
                       const Spacer(),
